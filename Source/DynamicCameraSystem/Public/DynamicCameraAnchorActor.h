@@ -6,21 +6,16 @@
 #include "GameFramework/Actor.h"
 #include "DynamicCameraAnchorActor.generated.h"
 
+class UDynamicCameraAnchorComponent;
+
 UCLASS()
 class DYNAMICCAMERASYSTEM_API ADynamicCameraAnchorActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ADynamicCameraAnchorActor();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UDynamicCameraAnchorComponent* CameraAnchor = nullptr;
 };

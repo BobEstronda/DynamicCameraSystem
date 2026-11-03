@@ -30,7 +30,9 @@ public:
 	void UnregisterAnchor(UDynamicCameraAnchorComponent* Anchor);
 
 	void GetAnchors(TArray<UDynamicCameraAnchorComponent*>& OutAnchors) const;
+	UDynamicCameraAnchorComponent* GetAnchor(FText AnchorName);
 
 private:
 	TArray<TWeakObjectPtr<UDynamicCameraAnchorComponent>> Anchors;
+	TMap<FName, UDynamicCameraAnchorComponent*> AnchorsMappeds;
 };

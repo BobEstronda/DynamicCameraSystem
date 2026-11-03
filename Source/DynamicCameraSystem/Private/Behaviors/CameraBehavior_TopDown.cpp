@@ -75,7 +75,7 @@ void UCameraBehavior_TopDown::Evaluate(const FCameraContext& Context, float Delt
 
 	if (bProbeCollision && Context.World)
 	{
-		FCollisionQueryParams Params(SCENE_QUERY_STAT(ArchCameraProbe), false);
+		FCollisionQueryParams Params(SCENE_QUERY_STAT(DynamicCameraProbe), false);
 		if (const APlayerController* PC = Context.PlayerController.Get())
 		{
 			if (const APawn* Pawn = PC->GetPawn())

@@ -52,6 +52,19 @@ bool UDynamicCameraSubsystem::SwitchToAnchor(UDynamicCameraAnchorComponent* Anch
 	return Activate(Anchor, nullptr);
 }
 
+bool UDynamicCameraSubsystem::SwitchToAnchorByName(FText Anchor)
+{
+	if (UWorld* World = GetWorld())
+	{
+		if (UDynamicCameraRegistry* Registry = World->GetSubsystem<UDynamicCameraRegistry>())
+		{
+			UDynamicCameraAnchorComponent* AC = Registry->GetAnchor(Anchor);
+			return Activate(AC, nullptr);
+		}
+	}
+	return false;
+}
+
 bool UDynamicCameraSubsystem::SwitchToAnchorWithBlend(UDynamicCameraAnchorComponent* Anchor, const FCameraBlend& Blend)
 {
 	return Activate(Anchor, &Blend);

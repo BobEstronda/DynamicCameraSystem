@@ -44,6 +44,9 @@ public:
 	bool SwitchToAnchor(UDynamicCameraAnchorComponent* Anchor);
 
 	UFUNCTION(BlueprintCallable, Category = "Camera")
+	bool SwitchToAnchorByName(FText Anchor);
+
+	UFUNCTION(BlueprintCallable, Category = "Camera")
 	bool SwitchToAnchorWithBlend(UDynamicCameraAnchorComponent* Anchor, const FCameraBlend& Blend);
 
 	// Stop controlling the view and give it back to the previous view target (usually the pawn).

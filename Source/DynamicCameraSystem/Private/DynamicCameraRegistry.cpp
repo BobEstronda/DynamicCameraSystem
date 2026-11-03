@@ -11,6 +11,7 @@ void UDynamicCameraRegistry::RegisterAnchor(UDynamicCameraAnchorComponent* Ancho
 		return;
 	}
 	Anchors.AddUnique(Anchor);
+	AnchorsMappeds.Add(FName(Anchor->AnchorName.ToString()), Anchor);
 	OnAnchorsChanged.Broadcast();
 }
 
@@ -20,6 +21,7 @@ void UDynamicCameraRegistry::UnregisterAnchor(UDynamicCameraAnchorComponent* Anc
 	{
 		return;
 	}
+	AnchorsMappeds.Remove(FName(Anchor->AnchorName.ToString()));
 	Anchors.RemoveSingleSwap(Anchor);
 	OnAnchorsChanged.Broadcast();
 }
@@ -38,4 +40,10 @@ void UDynamicCameraRegistry::GetAnchors(TArray<UDynamicCameraAnchorComponent*>& 
 		
 		OutAnchors.Add(Anchor);
 	}
+}
+
+UDynamicCameraAnchorComponent* UDynamicCameraRegistry::GetAnchor(FText AnchorName)
+{
+	UDynamicCameraAnchorComponent* Anchor = *AnchorsMappeds.Find(FName(AnchorName.ToString()));
+	return Anchor;
 }
