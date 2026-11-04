@@ -44,6 +44,8 @@ void UDynamicCameraRegistry::GetAnchors(TArray<UDynamicCameraAnchorComponent*>& 
 
 UDynamicCameraAnchorComponent* UDynamicCameraRegistry::GetAnchor(FText AnchorName)
 {
-	UDynamicCameraAnchorComponent* Anchor = *AnchorsMappeds.Find(FName(AnchorName.ToString()));
-	return Anchor;
+	//UDynamicCameraAnchorComponent* Anchor = *AnchorsMappeds.Find(FName(AnchorName.ToString()));
+	//return Anchor;
+
+	return AnchorsMappeds.FindRef(FName(AnchorName.ToString()));
 }
