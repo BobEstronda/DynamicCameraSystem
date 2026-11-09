@@ -4,6 +4,19 @@
 #include "Behaviors/CameraBehavior_Default.h"
 #include "DynamicCameraMath.h"
 
+#include "DrawDebugHelpers.h"
+
+#if ENABLE_DRAW_DEBUG
+#include "Engine/EngineTypes.h"
+#include "HAL/IConsoleManager.h"
+
+static TAutoConsoleVariable<int32> CVarDebugDefaultPivot(
+	TEXT("dc.DebugPivot"),
+	0,
+	TEXT("Draw the camera pivot, target pivot and movement radius. 0 = off, 1 = on."),
+	ECVF_Cheat);
+#endif
+
 void UCameraBehavior_Default::OnActivated(const FCameraContext& Context)
 {
 	TargetPivotOffset = FVector::ZeroVector;
@@ -100,6 +113,41 @@ void UCameraBehavior_Default::Move(const FCameraContext& Context, const float De
 	const float BackDistance = bOrthographic ? DefaultDistance : CurrentDistance;
 
 	OutLocation = Pivot - ViewRotation.Vector() * BackDistance;
+
+#if ENABLE_DRAW_DEBUG
+	if (Context.World && CVarDebugDefaultPivot.GetValueOnGameThread() != 0)
+	{
+		// Verde: pivô que a câmera usa neste frame, depois da interpolação.
+		DrawDebugSphere(
+			Context.World, Pivot, 12.f, 12, FColor::Green,
+			false, -1.f, SDPG_Foreground, 1.f);
+
+		const FVector Anchor = Context.AnchorTransform.GetLocation();
+
+		// Amarelo: destino e distância restante enquanto o pivô se aproxima.
+		if (!CurrentPivotOffset.Equals(TargetPivotOffset, 1.f))
+		{
+			const FVector TargetPivot = Anchor + TargetPivotOffset;
+
+			DrawDebugPoint(
+				Context.World, TargetPivot, 8.f, FColor::Yellow,
+				false, -1.f, SDPG_Foreground);
+
+			DrawDebugLine(
+				Context.World, Pivot, TargetPivot, FColor::Yellow,
+				false, -1.f, SDPG_Foreground, 1.f);
+		}
+
+		// Ciano: limite de movimento no plano XY, centrado na âncora.
+		if (bMove && MaxMoveRadius > 0.f)
+		{
+			DrawDebugCircle(
+				Context.World, Anchor, MaxMoveRadius, 96, FColor::Cyan,
+				false, -1.f, SDPG_Foreground, 1.f,
+				FVector::ForwardVector, FVector::RightVector, false);
+		}
+	}
+#endif
 }
 
 void UCameraBehavior_Default::ApplyZoom(const float DeltaTime, FMinimalViewInfo& InOutView)
